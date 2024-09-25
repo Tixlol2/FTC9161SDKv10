@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.overload;
 
-import android.graphics.Color;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
@@ -10,21 +8,9 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 
 
-import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Blinker;
 
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.TempUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
@@ -54,13 +40,11 @@ public class Drive extends LinearOpMode {
 
         MecanumDrive mecDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, Math.toRadians(0)));
         //hMap, name of servo used for claw
-        clawSubsystem clawSubsystem = new clawSubsystem(hardwareMap, "claw");
-        //hMap, name of motor used to change the ANGLE of the arm
-        angleSubsystem angleSubsystem = new angleSubsystem(hardwareMap, "angleChanger");
+        clawSubsystem clawSubsystem = new clawSubsystem(hardwareMap, "wrist", "driver");
         //hMap, name of motor used to change the EXTENSION HEIGHT of the arm/slides
-        extendSubsystem extendSubsystem = new extendSubsystem(hardwareMap, "extender");
+        armSubsystem armSubsystem = new armSubsystem(hardwareMap, "extender", "angle");
         waitForStart();
-
+        //During Initialization:
 
 
 
@@ -95,6 +79,7 @@ public class Drive extends LinearOpMode {
 
                 telemetry.addLine("MODE: Bot Centric | The front of the robot is the front of the controller");
             }
+
             // ----------------------------
             // Other Funcs Used in TeleOp
             // ----------------------------
@@ -105,20 +90,11 @@ public class Drive extends LinearOpMode {
                 sleep(500);
                 clawSubsystem.close();
             }
-
-            //Testing angleSubsystem
-            if (gamepad2.triangle){
-                angleSubsystem.angleSetTo(90);
-                sleep(500);
-                angleSubsystem.angleSetTo(0);
-            }
-
-
             //Testing extendSubsystem
             if (gamepad2.square){
-                extendSubsystem.extendIn(20);
+                armSubsystem.extendIn(20);
                 sleep(500);
-                extendSubsystem.extendIn(0);
+                armSubsystem.extendIn(0);
             }
 
 
@@ -131,13 +107,7 @@ public class Drive extends LinearOpMode {
 
             telemetry.update();
 
-            mecDrive.setDrivePowers(new PoseVelocity2d(
-                        new Vector2d(
-                                x,
-                                y
-                        ),
-                    angVel
-                    ));
+            mecDrive.setDrivePowers(new PoseVelocity2d(new Vector2d(x, y), angVel));
             // ----------------------------
         }
 

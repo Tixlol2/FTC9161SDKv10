@@ -6,22 +6,26 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class clawSubsystem extends SubsystemBase {
 
-    private final Servo claw;
+    private final Servo angleOfClaw;
+    private final Servo driverOfClaw;
     //TODO: Figure out what these values are
-    private final float open = 0;
-    private final float closed = 1;
+    private final float open = 1;
+    private final float closed = 0;
 
 
     //hMap is understandable, name is the name of the servo used
-    public clawSubsystem(final HardwareMap hMap, final String name){
-        claw = hMap.get(Servo.class, name);
+    public clawSubsystem(final HardwareMap hMap, final String wristName, final String openCloseName){
+        angleOfClaw = hMap.get(Servo.class, wristName);
+        driverOfClaw = hMap.get(Servo.class, openCloseName);
     }
 
     public void open(){
-        claw.setPosition(open);
+        driverOfClaw.setPosition(open);
     }
 
     public void close(){
-        claw.setPosition(closed);
+        driverOfClaw.setPosition(closed);
     }
+    //Using a dorect connection, this should hold up
+    public void setToAngle(int degrees){angleOfClaw.setPosition((1/360)*degrees);}
 }
