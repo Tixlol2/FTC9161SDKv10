@@ -68,7 +68,7 @@ public class PoseUpdater {
      * @param hardwareMap the HardwareMap
      */
     public PoseUpdater(HardwareMap hardwareMap) {
-        
+
         this(hardwareMap, new ThreeWheelLocalizer(hardwareMap));
     }
 
